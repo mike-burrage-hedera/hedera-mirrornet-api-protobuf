@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package hedera.mirrornet.proto;
+
+option go_package = "github.com/hashgraph/mirrornet/api/proto";
+option java_package = "com.hederahashgraph.mirrornet.api.java";
+
+// NOTE: HAPI protobuf definitions are currently imported without path prefix, in package "proto".
+import "BasicTypes.proto";
+import "QueryHeader.proto";
+
+message SubscribeToTopicRequest {
+    .proto.QueryHeader queryHeader = 1;
+    .proto.TopicID topicID = 2;
+}

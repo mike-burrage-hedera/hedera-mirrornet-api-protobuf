@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package hedera.mirrornet.proto;
+
+option go_package = "github.com/hashgraph/mirrornet/api/proto";
+option java_package = "com.hederahashgraph.mirrornet.api.java";
+
+// NOTE: HAPI protobuf definitions are currently imported without path prefix, in package "proto".
+import "Query.proto";
+import "Response.proto";
+import "Transaction.proto";
+import "TransactionResponse.proto";
+import "hedera/mirrornet/proto/get_topic_history.proto";
+import "hedera/mirrornet/proto/subscribe_to_topic.proto";
+
+service ConsensusMirrorService {
+    // Mainnet services duplicated here.
+    rpc createTopic (.proto.Transaction) returns (.proto.TransactionResponse);
+    rpc updateTopic (.proto.Transaction) returns (.proto.TransactionResponse);
+    rpc deleteTopic (.proto.Transaction) returns (.proto.TransactionResponse);
+    rpc getInfo (.proto.Query) returns (.proto.Response);
+    rpc submitMessage (.proto.Transaction) returns (.proto.TransactionResponse);
+
+    // Streams back ConsensusGetInfoResponse objects via GRPC.
+    // TODO: some kind of flow control or max number of responses sent per request? So that the client is basically charged.
+    // TODO: need better interface - not TransactionResponse here; the actual body.
+    rpc subscribeToTopic (SubscribeToTopicRequest) returns (stream .proto.TransactionResponse);
+
+    // Streams back ConsensusGetInfoResponse objects.
+    // TODO: need better interface - not TransactionResponse here; the actual body.
+    rpc getTopicHistory (GetTopicHistoryRequest) returns (stream .proto.TransactionResponse);
+}
